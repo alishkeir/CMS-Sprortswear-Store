@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Admins;
 use Illuminate\Http\Request;
 
 class AdminsController extends Controller
@@ -13,7 +13,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        //
+        ////
     }
 
     /**
