@@ -1,19 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Admins;
+use App\Http\Resources\Admins as AdminsResource;
 use Illuminate\Http\Request;
+use JWTAuth;
+
 
 class AdminsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
+
+
     public function index()
     {
-        ////
+        return AdminsResource::collection(Admins::paginate(5));
+
     }
 
     /**
@@ -21,10 +30,6 @@ class AdminsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,7 +39,26 @@ class AdminsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "username" => 'required',
+            "email" => 'required',
+            "password" => 'required',
+        ]);
+        $validator = \Validator::make($request->all(), [
+            'username' => 'required|unique:admins',
+            'email' => 'required|unique:admins',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        $admin = new Admins([
+            "username" => $request->username,
+            "email" => $request->email,
+            "password" => bcrypt($request->password),
+        ]);
+        $admin->save();
+        return response()->json(["data" => "admin created"]);
     }
 
     /**
@@ -43,10 +67,6 @@ class AdminsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -54,10 +74,6 @@ class AdminsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -68,7 +84,19 @@ class AdminsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "username" => "required",
+            "email" => "required",
+            "password" => "required",
+        ]);
+
+        $admin = Admins::findOrFail($id);
+
+        $admin->username = $request->username;
+        $admin->email = $request->email;
+        $admin->password = bcrypt($request->password);
+        $admin->save();
+        return response()->json(["data" => "admin edited"]);
     }
 
     /**
@@ -79,6 +107,9 @@ class AdminsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $admin = Admins::findOrFail($id);
+        $admin->destroy($id);
+
+        return response()->json(['data' => "deleted"]);
     }
 }

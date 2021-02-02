@@ -18,6 +18,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('categories', 'CategoriesController');
-Route::resource('items', 'ItemsController');
-Route::resource('messages', 'MessagesController');
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth',
+
+], function ($router) {
+
+    Route::post('register', 'JWTAuthController@register');
+    Route::post('login', 'JWTAuthController@login');
+    Route::post('logout', 'JWTAuthController@logout');
+    Route::post('refresh', 'JWTAuthController@refresh');
+    Route::get('profile', 'JWTAuthController@profile');
+    Route::resource('categories', 'CategoriesController');
+    Route::resource('items', 'ItemsController');
+    Route::resource('messages', 'MessagesController');
+
+});
+
+Route::resource('message', 'MessageController');
+

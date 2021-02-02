@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Messages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use JWTAuth;
 
 class MessagesController extends Controller
 {
+
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,32 +42,7 @@ class MessagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
 
-            'name' => 'required|max:255',
-            'title' => 'required',
-            'content' => 'required',
-            'email' => 'required|email:rfc,dns|max:255',
-
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
-        } else {
-            $data = $request->all();
-            $message = new Messages();
-
-            $message->name = $data['name'];
-            $message->title = $data['title'];
-            $message->content = $data['content'];
-            $message->email = $data['email'];
-            $message->save();
-            return response()->json(['status' => 200, 'message' => $message]);
-
-        }
-    }
 
     /**
      * Display the specified resource.

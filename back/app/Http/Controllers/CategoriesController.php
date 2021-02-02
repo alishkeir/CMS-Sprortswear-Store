@@ -6,9 +6,17 @@ use App\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use JWTAuth;
+
 
 class CategoriesController extends Controller
 {
+  protected $user;
+
+  public function __construct()
+  {
+      $this->user = JWTAuth::parseToken()->authenticate();
+  }
     /**
      * Display a listing of the resource.
      *
