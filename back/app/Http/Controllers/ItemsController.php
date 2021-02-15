@@ -23,10 +23,10 @@ class ItemsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return Items::paginate(10);
-    }
+    // public function index()
+    // {
+    //     return Items::paginate(10);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -83,10 +83,10 @@ class ItemsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        return Items::where("id", $id)->first();
-    }
+    // public function show($id)
+    // {
+    //     return Items::where("id", $id)->first();
+    // }
 
     /**
      * Show the form for editing the specified resource.

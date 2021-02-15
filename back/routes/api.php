@@ -32,8 +32,11 @@ Route::group([
     Route::resource('categories', 'CategoriesController');
     Route::resource('items', 'ItemsController');
     Route::resource('messages', 'MessagesController');
+    Route::resource('admins', 'AdminsController');
 
 });
 
 Route::resource('message', 'MessageController');
+Route::resource('item', 'ItemController');
+Route::resource('category', 'CategoryController');
 
